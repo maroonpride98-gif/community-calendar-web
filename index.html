@@ -118,9 +118,9 @@ body {
 			<div id="status-notice"></div>
 		</div>
 
-		<script src="index.js?v=9"></script>
+		<script src="index.js?v=10"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck?v=9":1853808,"index.wasm?v=9":43016933},"focusCanvas":true,"gdextensionLibs":[],"serviceWorker":"index.service.worker.js?v=9"};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck?v=10":1853808,"index.wasm?v=10":43016933},"focusCanvas":true,"gdextensionLibs":[],"serviceWorker":"index.service.worker.js?v=10"};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -252,8 +252,81 @@ const engine = new Engine(GODOT_CONFIG);
 
 			document.body.appendChild(mobileInput);
 
-			// Focus input when canvas is tapped
+			// Forward keyboard input to Godot canvas
 			const canvas = document.getElementById('canvas');
+
+			mobileInput.addEventListener('input', function(e) {
+				const text = e.target.value;
+				console.log('[Mobile Helper] Input received:', text);
+
+				// Send each character as a keyboard event to canvas
+				if (text.length > 0) {
+					const lastChar = text.charAt(text.length - 1);
+
+					// Create and dispatch keyboard events
+					const keydownEvent = new KeyboardEvent('keydown', {
+						key: lastChar,
+						code: 'Key' + lastChar.toUpperCase(),
+						charCode: lastChar.charCodeAt(0),
+						keyCode: lastChar.charCodeAt(0),
+						which: lastChar.charCodeAt(0),
+						bubbles: true,
+						cancelable: true
+					});
+
+					const keypressEvent = new KeyboardEvent('keypress', {
+						key: lastChar,
+						code: 'Key' + lastChar.toUpperCase(),
+						charCode: lastChar.charCodeAt(0),
+						keyCode: lastChar.charCodeAt(0),
+						which: lastChar.charCodeAt(0),
+						bubbles: true,
+						cancelable: true
+					});
+
+					const keyupEvent = new KeyboardEvent('keyup', {
+						key: lastChar,
+						code: 'Key' + lastChar.toUpperCase(),
+						charCode: lastChar.charCodeAt(0),
+						keyCode: lastChar.charCodeAt(0),
+						which: lastChar.charCodeAt(0),
+						bubbles: true,
+						cancelable: true
+					});
+
+					canvas.dispatchEvent(keydownEvent);
+					canvas.dispatchEvent(keypressEvent);
+					canvas.dispatchEvent(keyupEvent);
+
+					console.log('[Mobile Helper] Sent keyboard events for:', lastChar);
+				}
+			});
+
+			// Handle backspace/delete
+			let previousValue = '';
+			mobileInput.addEventListener('input', function(e) {
+				const currentValue = e.target.value;
+
+				if (currentValue.length < previousValue.length) {
+					// Backspace was pressed
+					console.log('[Mobile Helper] Backspace detected');
+
+					const backspaceEvent = new KeyboardEvent('keydown', {
+						key: 'Backspace',
+						code: 'Backspace',
+						keyCode: 8,
+						which: 8,
+						bubbles: true,
+						cancelable: true
+					});
+
+					canvas.dispatchEvent(backspaceEvent);
+				}
+
+				previousValue = currentValue;
+			});
+
+			// Focus input when canvas is tapped
 			let tapTimeout;
 
 			canvas.addEventListener('touchstart', function(e) {
@@ -267,6 +340,14 @@ const engine = new Engine(GODOT_CONFIG);
 			canvas.addEventListener('touchend', function() {
 				clearTimeout(tapTimeout);
 			}, { passive: true });
+
+			// Keep input focused
+			mobileInput.addEventListener('blur', function() {
+				setTimeout(() => {
+					mobileInput.focus();
+					console.log('[Mobile Helper] Re-focusing input to keep keyboard visible');
+				}, 100);
+			});
 
 			// Try to auto-focus on page load for mobile
 			setTimeout(() => {
