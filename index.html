@@ -228,10 +228,38 @@ const engine = new Engine(GODOT_CONFIG);
 				const registerBtn = document.getElementById('mobile-register-btn');
 				const errorDiv = document.getElementById('mobile-error');
 
+				// Function to show mobile login
+				function showMobileLogin() {
+					overlay.style.display = 'flex';
+					emailInput.value = '';
+					passwordInput.value = '';
+					hideError();
+				}
+
+				// Listen for logout events from Godot
+				window.addEventListener('storage', (e) => {
+					if (e.key === 'eventhive_auth_token' && !e.newValue) {
+						// Token was removed - show login
+						showMobileLogin();
+					}
+				});
+
+				// Check URL parameters for logout
+				const urlParams = new URLSearchParams(window.location.search);
+				if (urlParams.get('logout') === 'true') {
+					localStorage.removeItem('eventhive_auth_token');
+					localStorage.removeItem('eventhive_user_data');
+					window.history.replaceState({}, document.title, window.location.pathname);
+					showMobileLogin();
+				}
+
 				// Check if already logged in
 				const token = localStorage.getItem('eventhive_auth_token');
 				if (!token) {
-					overlay.style.display = 'flex';
+					showMobileLogin();
+				} else {
+					// Make logout button visible in Godot to redirect back to mobile login
+					console.log('[Mobile] Already logged in, loading app...');
 				}
 
 				function showError(message) {

@@ -4,7 +4,7 @@
 // Incrementing CACHE_VERSION will kick off the install event and force
 // previously cached resources to be updated from the network.
 /** @type {string} */
-const CACHE_VERSION = '1764187000|27000000';
+const CACHE_VERSION = '1764187200|28000000';
 /** @type {string} */
 const CACHE_PREFIX = 'EventHive-sw-cache-';
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION;
