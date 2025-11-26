@@ -76,25 +76,148 @@ body {
 	z-index: 1;
 }
 
-/* Mobile keyboard helper */
-.mobile-input-overlay {
-	position: absolute;
-	opacity: 0.01;
-	pointer-events: auto;
-	font-size: 16px;
-	border: none;
-	background: transparent;
-	color: transparent;
-	z-index: 100;
+/* Mobile Login Form */
+#mobile-login-container {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(135deg, #0a0a15 0%, #1a1a2e 100%);
+	z-index: 9999;
+	display: none;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 20px;
+	box-sizing: border-box;
 }
 
-.mobile-input-overlay:focus {
-	opacity: 0.01;
+#mobile-login-container.show {
+	display: flex;
+}
+
+.mobile-login-box {
+	background: rgba(8, 8, 15, 0.9);
+	border: 2px solid #00ccff;
+	border-radius: 20px;
+	padding: 30px;
+	width: 100%;
+	max-width: 400px;
+	box-shadow: 0 0 30px rgba(0, 204, 255, 0.4);
+}
+
+.mobile-login-logo {
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.mobile-login-logo h1 {
+	color: #ffd042;
+	font-size: 36px;
+	margin: 0;
+	text-shadow: 0 0 10px rgba(255, 208, 66, 0.5);
+	font-family: Arial, sans-serif;
+	font-weight: bold;
+}
+
+.mobile-login-logo p {
+	color: #00ccff;
+	font-size: 14px;
+	margin: 5px 0 0 0;
+	font-family: Arial, sans-serif;
+}
+
+.mobile-login-form label {
+	display: block;
+	color: #00ccff;
+	font-size: 14px;
+	margin-bottom: 8px;
+	font-family: Arial, sans-serif;
+	text-transform: uppercase;
+}
+
+.mobile-login-form input {
+	width: 100%;
+	padding: 15px;
+	margin-bottom: 20px;
+	background: rgba(5, 5, 12, 0.9);
+	border: 2px solid rgba(0, 204, 255, 0.4);
+	border-radius: 12px;
+	color: #00ccff;
+	font-size: 16px;
+	box-sizing: border-box;
+	font-family: Arial, sans-serif;
+}
+
+.mobile-login-form input:focus {
+	outline: none;
+	border-color: #00ccff;
+	box-shadow: 0 0 10px rgba(0, 204, 255, 0.3);
+}
+
+.mobile-login-button {
+	width: 100%;
+	padding: 15px;
+	background: #00ccff;
+	border: none;
+	border-radius: 12px;
+	color: #0a0a15;
+	font-size: 18px;
+	font-weight: bold;
+	cursor: pointer;
+	font-family: Arial, sans-serif;
+	text-transform: uppercase;
+	box-shadow: 0 4px 15px rgba(0, 204, 255, 0.4);
+}
+
+.mobile-login-button:active {
+	background: #0099cc;
+}
+
+.mobile-login-error {
+	color: #ff4444;
+	background: rgba(255, 68, 68, 0.1);
+	border: 1px solid #ff4444;
+	border-radius: 8px;
+	padding: 10px;
+	margin-bottom: 15px;
+	font-size: 14px;
+	text-align: center;
+	display: none;
+	font-family: Arial, sans-serif;
+}
+
+.mobile-login-error.show {
+	display: block;
+}
+
+.mobile-login-toggle {
+	text-align: center;
+	margin-top: 20px;
+}
+
+.mobile-login-toggle button {
+	background: none;
+	border: none;
+	color: #ff00ff;
+	font-size: 14px;
+	cursor: pointer;
+	text-decoration: underline;
+	font-family: Arial, sans-serif;
+}
+
+.mobile-register-fields {
+	display: none;
+}
+
+.mobile-register-fields.show {
+	display: block;
 }
 
 @media (min-width: 769px) {
-	.mobile-input-overlay {
-		display: none;
+	#mobile-login-container {
+		display: none !important;
 	}
 }
 		</style>
@@ -104,6 +227,53 @@ body {
 
 	</head>
 	<body>
+		<!-- Mobile Login Form -->
+		<div id="mobile-login-container">
+			<div class="mobile-login-box">
+				<div class="mobile-login-logo">
+					<h1>EVENTHIVE</h1>
+					<p>// DISCOVER LOCAL EVENTS //</p>
+				</div>
+
+				<div class="mobile-login-error" id="mobile-error"></div>
+
+				<form class="mobile-login-form" id="mobile-login-form">
+					<div id="login-fields">
+						<label for="mobile-email">⟫ EMAIL</label>
+						<input type="email" id="mobile-email" placeholder="user@example.com" required autocomplete="email">
+
+						<label for="mobile-password">⟫ PASSWORD</label>
+						<input type="password" id="mobile-password" placeholder="Enter password" required autocomplete="current-password">
+
+						<button type="submit" class="mobile-login-button" id="mobile-login-btn">⟫ LOGIN</button>
+					</div>
+
+					<div class="mobile-register-fields" id="register-fields">
+						<label for="mobile-reg-username">⟫ USERNAME</label>
+						<input type="text" id="mobile-reg-username" placeholder="username" autocomplete="username">
+
+						<label for="mobile-reg-email">⟫ EMAIL</label>
+						<input type="email" id="mobile-reg-email" placeholder="user@example.com" autocomplete="email">
+
+						<label for="mobile-reg-zipcode">⟫ ZIP CODE</label>
+						<input type="text" id="mobile-reg-zipcode" placeholder="73000" maxlength="5" pattern="[0-9]{5}" autocomplete="postal-code">
+
+						<label for="mobile-reg-password">⟫ PASSWORD</label>
+						<input type="password" id="mobile-reg-password" placeholder="min 6 characters" autocomplete="new-password">
+
+						<label for="mobile-reg-confirm">⟫ CONFIRM PASSWORD</label>
+						<input type="password" id="mobile-reg-confirm" placeholder="re-enter password" autocomplete="new-password">
+
+						<button type="submit" class="mobile-login-button" id="mobile-register-btn">⟫ REGISTER</button>
+					</div>
+				</form>
+
+				<div class="mobile-login-toggle">
+					<button type="button" id="mobile-toggle-btn">⟫ CREATE ACCOUNT</button>
+				</div>
+			</div>
+		</div>
+
 		<canvas id="canvas">
 			Your browser does not support the canvas tag.
 		</canvas>
@@ -118,9 +288,9 @@ body {
 			<div id="status-notice"></div>
 		</div>
 
-		<script src="index.js?v=10"></script>
+		<script src="index.js?v=11"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck?v=10":1853808,"index.wasm?v=10":43016933},"focusCanvas":true,"gdextensionLibs":[],"serviceWorker":"index.service.worker.js?v=10"};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck?v=11":1853808,"index.wasm?v=11":43016933},"focusCanvas":true,"gdextensionLibs":[],"serviceWorker":"index.service.worker.js?v=11"};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -218,7 +388,7 @@ const engine = new Engine(GODOT_CONFIG);
 }());
 		</script>
 
-		<!-- Mobile Keyboard Helper -->
+		<!-- Mobile Login Handler -->
 		<script>
 		// Detect if user is on mobile device
 		function isMobileDevice() {
@@ -226,136 +396,147 @@ const engine = new Engine(GODOT_CONFIG);
 				   (window.innerWidth <= 768);
 		}
 
-		// Create transparent input overlay for mobile keyboards
+		// API configuration
+		const API_URL = 'https://community-calendar-backend-1.onrender.com/api';
+
+		// Show mobile login form if on mobile
 		if (isMobileDevice()) {
-			console.log('[Mobile Helper] Mobile device detected, enabling keyboard helpers');
+			console.log('[Mobile Login] Mobile device detected');
+			const mobileContainer = document.getElementById('mobile-login-container');
+			mobileContainer.classList.add('show');
 
-			// Create invisible input that covers login area
-			const mobileInput = document.createElement('input');
-			mobileInput.type = 'text';
-			mobileInput.className = 'mobile-input-overlay';
-			mobileInput.setAttribute('autocomplete', 'off');
-			mobileInput.setAttribute('autocorrect', 'off');
-			mobileInput.setAttribute('autocapitalize', 'off');
-			mobileInput.setAttribute('spellcheck', 'false');
-			mobileInput.style.cssText = `
-				position: fixed;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%;
-				opacity: 0.01;
-				font-size: 16px;
-				z-index: 999;
-				pointer-events: auto;
-			`;
+			const loginFields = document.getElementById('login-fields');
+			const registerFields = document.getElementById('register-fields');
+			const toggleBtn = document.getElementById('mobile-toggle-btn');
+			const errorDiv = document.getElementById('mobile-error');
+			const form = document.getElementById('mobile-login-form');
 
-			document.body.appendChild(mobileInput);
+			let isRegisterMode = false;
 
-			// Forward keyboard input to Godot canvas
-			const canvas = document.getElementById('canvas');
+			// Toggle between login and register
+			toggleBtn.addEventListener('click', function() {
+				isRegisterMode = !isRegisterMode;
+				if (isRegisterMode) {
+					loginFields.style.display = 'none';
+					registerFields.classList.add('show');
+					toggleBtn.textContent = '⟫ BACK TO LOGIN';
+				} else {
+					loginFields.style.display = 'block';
+					registerFields.classList.remove('show');
+					toggleBtn.textContent = '⟫ CREATE ACCOUNT';
+				}
+				errorDiv.classList.remove('show');
+			});
 
-			mobileInput.addEventListener('input', function(e) {
-				const text = e.target.value;
-				console.log('[Mobile Helper] Input received:', text);
+			// Handle form submission
+			form.addEventListener('submit', async function(e) {
+				e.preventDefault();
+				errorDiv.classList.remove('show');
 
-				// Send each character as a keyboard event to canvas
-				if (text.length > 0) {
-					const lastChar = text.charAt(text.length - 1);
+				if (isRegisterMode) {
+					// Handle registration
+					const username = document.getElementById('mobile-reg-username').value.trim();
+					const email = document.getElementById('mobile-reg-email').value.trim();
+					const zipcode = document.getElementById('mobile-reg-zipcode').value.trim();
+					const password = document.getElementById('mobile-reg-password').value;
+					const confirm = document.getElementById('mobile-reg-confirm').value;
 
-					// Create and dispatch keyboard events
-					const keydownEvent = new KeyboardEvent('keydown', {
-						key: lastChar,
-						code: 'Key' + lastChar.toUpperCase(),
-						charCode: lastChar.charCodeAt(0),
-						keyCode: lastChar.charCodeAt(0),
-						which: lastChar.charCodeAt(0),
-						bubbles: true,
-						cancelable: true
-					});
+					if (!username || username.length < 3) {
+						showError('Username must be at least 3 characters');
+						return;
+					}
 
-					const keypressEvent = new KeyboardEvent('keypress', {
-						key: lastChar,
-						code: 'Key' + lastChar.toUpperCase(),
-						charCode: lastChar.charCodeAt(0),
-						keyCode: lastChar.charCodeAt(0),
-						which: lastChar.charCodeAt(0),
-						bubbles: true,
-						cancelable: true
-					});
+					if (!email || !email.includes('@')) {
+						showError('Please enter a valid email');
+						return;
+					}
 
-					const keyupEvent = new KeyboardEvent('keyup', {
-						key: lastChar,
-						code: 'Key' + lastChar.toUpperCase(),
-						charCode: lastChar.charCodeAt(0),
-						keyCode: lastChar.charCodeAt(0),
-						which: lastChar.charCodeAt(0),
-						bubbles: true,
-						cancelable: true
-					});
+					if (!zipcode || zipcode.length !== 5 || !/^\d{5}$/.test(zipcode)) {
+						showError('Please enter a valid 5-digit zip code');
+						return;
+					}
 
-					canvas.dispatchEvent(keydownEvent);
-					canvas.dispatchEvent(keypressEvent);
-					canvas.dispatchEvent(keyupEvent);
+					if (!password || password.length < 6) {
+						showError('Password must be at least 6 characters');
+						return;
+					}
 
-					console.log('[Mobile Helper] Sent keyboard events for:', lastChar);
+					if (password !== confirm) {
+						showError('Passwords do not match');
+						return;
+					}
+
+					try {
+						document.getElementById('mobile-register-btn').textContent = '⏳ CREATING ACCOUNT...';
+						const response = await fetch(`${API_URL}/auth/register`, {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify({ username, email, password, zipcode })
+						});
+
+						const data = await response.json();
+
+						if (response.ok) {
+							// Auto-login after successful registration
+							loginUser(data.token, data.user);
+						} else {
+							showError(data.message || 'Registration failed');
+							document.getElementById('mobile-register-btn').textContent = '⟫ REGISTER';
+						}
+					} catch (error) {
+						showError('Network error. Please check your connection.');
+						document.getElementById('mobile-register-btn').textContent = '⟫ REGISTER';
+					}
+				} else {
+					// Handle login
+					const email = document.getElementById('mobile-email').value.trim();
+					const password = document.getElementById('mobile-password').value;
+
+					if (!email || !password) {
+						showError('Please enter both email and password');
+						return;
+					}
+
+					try {
+						document.getElementById('mobile-login-btn').textContent = '⏳ LOGGING IN...';
+						const response = await fetch(`${API_URL}/auth/login`, {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify({ email, password })
+						});
+
+						const data = await response.json();
+
+						if (response.ok) {
+							loginUser(data.token, data.user);
+						} else {
+							showError(data.message || 'Login failed. Please check your credentials.');
+							document.getElementById('mobile-login-btn').textContent = '⟫ LOGIN';
+						}
+					} catch (error) {
+						showError('Network error. Please check your connection.');
+						document.getElementById('mobile-login-btn').textContent = '⟫ LOGIN';
+					}
 				}
 			});
 
-			// Handle backspace/delete
-			let previousValue = '';
-			mobileInput.addEventListener('input', function(e) {
-				const currentValue = e.target.value;
+			function showError(message) {
+				errorDiv.textContent = message;
+				errorDiv.classList.add('show');
+			}
 
-				if (currentValue.length < previousValue.length) {
-					// Backspace was pressed
-					console.log('[Mobile Helper] Backspace detected');
+			function loginUser(token, userData) {
+				console.log('[Mobile Login] Login successful!', userData);
 
-					const backspaceEvent = new KeyboardEvent('keydown', {
-						key: 'Backspace',
-						code: 'Backspace',
-						keyCode: 8,
-						which: 8,
-						bubbles: true,
-						cancelable: true
-					});
+				// Store auth data in localStorage for Godot to access
+				localStorage.setItem('eventhive_auth_token', token);
+				localStorage.setItem('eventhive_user_data', JSON.stringify(userData));
 
-					canvas.dispatchEvent(backspaceEvent);
-				}
+				// Hide mobile login form
+				mobileContainer.classList.remove('show');
 
-				previousValue = currentValue;
-			});
-
-			// Focus input when canvas is tapped
-			let tapTimeout;
-
-			canvas.addEventListener('touchstart', function(e) {
-				console.log('[Mobile Helper] Touch detected on canvas');
-				tapTimeout = setTimeout(() => {
-					mobileInput.focus();
-					console.log('[Mobile Helper] Focusing mobile input to trigger keyboard');
-				}, 100);
-			}, { passive: true });
-
-			canvas.addEventListener('touchend', function() {
-				clearTimeout(tapTimeout);
-			}, { passive: true });
-
-			// Keep input focused
-			mobileInput.addEventListener('blur', function() {
-				setTimeout(() => {
-					mobileInput.focus();
-					console.log('[Mobile Helper] Re-focusing input to keep keyboard visible');
-				}, 100);
-			});
-
-			// Try to auto-focus on page load for mobile
-			setTimeout(() => {
-				if (isMobileDevice()) {
-					mobileInput.focus();
-					console.log('[Mobile Helper] Auto-focusing input for mobile keyboard');
-				}
-			}, 1000);
+				console.log('[Mobile Login] Auth token stored, starting Godot app');
+			}
 		}
 		</script>
 	</body>
