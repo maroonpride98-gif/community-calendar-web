@@ -288,9 +288,9 @@ body {
 			<div id="status-notice"></div>
 		</div>
 
-		<script src="index.js?v=12"></script>
+		<script src="index.js?v=13"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck?v=12":1853808,"index.wasm?v=12":43016933},"focusCanvas":true,"gdextensionLibs":[],"serviceWorker":"index.service.worker.js?v=12"};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck?v=13":1853808,"index.wasm?v=13":43016933},"focusCanvas":true,"gdextensionLibs":[],"serviceWorker":"index.service.worker.js?v=13"};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -532,10 +532,17 @@ const engine = new Engine(GODOT_CONFIG);
 				localStorage.setItem('eventhive_auth_token', token);
 				localStorage.setItem('eventhive_user_data', JSON.stringify(userData));
 
-				// Hide mobile login form
-				mobileContainer.classList.remove('show');
+				console.log('[Mobile Login] Stored in localStorage:');
+				console.log('  - Token:', token.substring(0, 20) + '...');
+				console.log('  - User:', userData.email);
+				console.log('  - Verify token:', localStorage.getItem('eventhive_auth_token').substring(0, 20) + '...');
 
-				console.log('[Mobile Login] Auth token stored, starting Godot app');
+				// Keep mobile login visible for a moment to ensure Godot loads
+				setTimeout(() => {
+					// Hide mobile login form
+					mobileContainer.classList.remove('show');
+					console.log('[Mobile Login] Form hidden, Godot should auto-login now');
+				}, 500);
 			}
 		}
 		</script>
