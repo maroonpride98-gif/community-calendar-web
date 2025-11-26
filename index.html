@@ -288,9 +288,9 @@ body {
 			<div id="status-notice"></div>
 		</div>
 
-		<script src="index.js?v=13"></script>
+		<script src="index.js?v=14"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck?v=13":1853808,"index.wasm?v=13":43016933},"focusCanvas":true,"gdextensionLibs":[],"serviceWorker":"index.service.worker.js?v=13"};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck?v=14":1853808,"index.wasm?v=14":43016933},"focusCanvas":true,"gdextensionLibs":[],"serviceWorker":"index.service.worker.js?v=14"};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -499,13 +499,21 @@ const engine = new Engine(GODOT_CONFIG);
 
 					try {
 						document.getElementById('mobile-login-btn').textContent = '⏳ LOGGING IN...';
+
+						console.log('[Mobile Login] Attempting login to:', `${API_URL}/auth/login`);
+
 						const response = await fetch(`${API_URL}/auth/login`, {
 							method: 'POST',
 							headers: { 'Content-Type': 'application/json' },
-							body: JSON.stringify({ email, password })
+							body: JSON.stringify({ email, password }),
+							mode: 'cors',
+							credentials: 'include'
 						});
 
+						console.log('[Mobile Login] Response status:', response.status);
+
 						const data = await response.json();
+						console.log('[Mobile Login] Response data:', data);
 
 						if (response.ok) {
 							loginUser(data.token, data.user);
@@ -514,7 +522,8 @@ const engine = new Engine(GODOT_CONFIG);
 							document.getElementById('mobile-login-btn').textContent = '⟫ LOGIN';
 						}
 					} catch (error) {
-						showError('Network error. Please check your connection.');
+						console.error('[Mobile Login] Error:', error);
+						showError('Network error. The backend may be starting up. Please wait 10 seconds and try again.');
 						document.getElementById('mobile-login-btn').textContent = '⟫ LOGIN';
 					}
 				}
