@@ -15,7 +15,7 @@ body {
 	color: white;
 	background-color: black;
 	overflow: hidden;
-	touch-action: none;
+	touch-action: manipulation;
 }
 
 #canvas {
@@ -194,6 +194,109 @@ const engine = new Engine(GODOT_CONFIG);
 		}, displayFailureNotice);
 	}
 }());
+		</script>
+		<!-- Mobile Login Overlay -->
+		<div id="mobile-login-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
+			<div style="max-width: 400px; width: 100%;">
+				<h1 style="color: #FFD700; text-align: center; margin-bottom: 10px;">EVENTHIVE</h1>
+				<p style="color: #00CED1; text-align: center; margin-bottom: 30px;">// DISCOVER LOCAL EVENTS //</p>
+
+				<div id="mobile-error" style="display: none; color: #FF6B6B; background: rgba(255, 107, 107, 0.1); border: 1px solid #FF6B6B; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center;"></div>
+
+				<input type="email" id="mobile-email" placeholder="Email" autocomplete="email" style="width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 2px solid #00CED1; border-radius: 8px; color: white; font-size: 16px; box-sizing: border-box;">
+
+				<input type="password" id="mobile-password" placeholder="Password" autocomplete="current-password" style="width: 100%; padding: 15px; margin-bottom: 20px; background: #1a1a1a; border: 2px solid #00CED1; border-radius: 8px; color: white; font-size: 16px; box-sizing: border-box;">
+
+				<button id="mobile-login-btn" style="width: 100%; padding: 15px; background: #00CED1; border: none; border-radius: 8px; color: black; font-weight: bold; font-size: 16px; cursor: pointer; margin-bottom: 15px;">LOGIN</button>
+
+				<button id="mobile-register-btn" style="width: 100%; padding: 15px; background: transparent; border: 2px solid #FF1493; border-radius: 8px; color: #FF1493; font-weight: bold; font-size: 16px; cursor: pointer;">CREATE ACCOUNT</button>
+
+				<p style="color: #888; text-align: center; margin-top: 20px; font-size: 12px;">For best experience, download the Android app</p>
+			</div>
+		</div>
+
+		<script>
+		// Mobile login functionality
+		(function() {
+			const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+
+			if (isMobile) {
+				const overlay = document.getElementById('mobile-login-overlay');
+				const emailInput = document.getElementById('mobile-email');
+				const passwordInput = document.getElementById('mobile-password');
+				const loginBtn = document.getElementById('mobile-login-btn');
+				const registerBtn = document.getElementById('mobile-register-btn');
+				const errorDiv = document.getElementById('mobile-error');
+
+				// Check if already logged in
+				const token = localStorage.getItem('eventhive_auth_token');
+				if (!token) {
+					overlay.style.display = 'flex';
+				}
+
+				function showError(message) {
+					errorDiv.textContent = message;
+					errorDiv.style.display = 'block';
+				}
+
+				function hideError() {
+					errorDiv.style.display = 'none';
+				}
+
+				loginBtn.addEventListener('click', async () => {
+					hideError();
+					const email = emailInput.value.trim();
+					const password = passwordInput.value;
+
+					if (!email || !password) {
+						showError('Please enter both email and password');
+						return;
+					}
+
+					loginBtn.textContent = 'LOGGING IN...';
+					loginBtn.disabled = true;
+
+					try {
+						const response = await fetch('https://community-calendar-backend-1.onrender.com/api/auth/login', {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify({ email, password })
+						});
+
+						const data = await response.json();
+
+						if (response.ok && data.token) {
+							// Store auth data
+							localStorage.setItem('eventhive_auth_token', data.token);
+							localStorage.setItem('eventhive_user_data', JSON.stringify(data));
+
+							// Hide overlay and reload
+							overlay.style.display = 'none';
+							window.location.reload();
+						} else {
+							showError(data.message || 'Login failed. Please check your credentials.');
+							loginBtn.textContent = 'LOGIN';
+							loginBtn.disabled = false;
+						}
+					} catch (error) {
+						showError('Network error. Please check your connection and try again.');
+						loginBtn.textContent = 'LOGIN';
+						loginBtn.disabled = false;
+					}
+				});
+
+				registerBtn.addEventListener('click', () => {
+					alert('Registration: Please visit the desktop version or download the Android app to create an account.');
+				});
+
+				// Allow Enter key to submit
+				passwordInput.addEventListener('keypress', (e) => {
+					if (e.key === 'Enter') {
+						loginBtn.click();
+					}
+				});
+			}
+		})();
 		</script>
 	</body>
 </html>
