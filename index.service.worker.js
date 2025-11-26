@@ -4,7 +4,7 @@
 // Incrementing CACHE_VERSION will kick off the install event and force
 // previously cached resources to be updated from the network.
 /** @type {string} */
-const CACHE_VERSION = '1764139507|14194942';
+const CACHE_VERSION = 'v8-mobile-keyboard-' + Date.now();
 /** @type {string} */
 const CACHE_PREFIX = 'EventHive-sw-cache-';
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION;
