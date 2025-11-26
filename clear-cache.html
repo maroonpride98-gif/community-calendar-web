@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clearing Cache...</title>
+    <style>
+        body {
+            background-color: #242424;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .status {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .progress {
+            font-size: 18px;
+            color: #00ff00;
+        }
+    </style>
+</head>
+<body>
+    <div class="status">🔄 Clearing cache and service worker...</div>
+    <div class="progress" id="progress">Please wait...</div>
+
+    <script>
+        async function clearEverything() {
+            const progress = document.getElementById('progress');
+
+            try {
+                // Step 1: Unregister all service workers
+                progress.textContent = 'Step 1: Unregistering service workers...';
+                if ('serviceWorker' in navigator) {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    for (let registration of registrations) {
+                        await registration.unregister();
+                        console.log('Service worker unregistered:', registration);
+                    }
+                }
+
+                // Step 2: Clear all caches
+                progress.textContent = 'Step 2: Clearing all caches...';
+                if ('caches' in window) {
+                    const cacheNames = await caches.keys();
+                    for (let cacheName of cacheNames) {
+                        await caches.delete(cacheName);
+                        console.log('Cache deleted:', cacheName);
+                    }
+                }
+
+                // Step 3: Clear local storage
+                progress.textContent = 'Step 3: Clearing local storage...';
+                localStorage.clear();
+                sessionStorage.clear();
+
+                // Step 4: Clear cookies
+                progress.textContent = 'Step 4: Clearing cookies...';
+                document.cookie.split(";").forEach(function(c) {
+                    document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                });
+
+                // Success!
+                progress.textContent = '✅ Cache cleared successfully!';
+                progress.style.color = '#00ff00';
+
+                // Redirect after 2 seconds
+                setTimeout(() => {
+                    progress.textContent = 'Redirecting to login page...';
+                    window.location.href = 'index.html';
+                }, 2000);
+
+            } catch (error) {
+                progress.textContent = '❌ Error: ' + error.message;
+                progress.style.color = '#ff0000';
+                console.error('Clear cache error:', error);
+
+                // Still redirect after 3 seconds
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 3000);
+            }
+        }
+
+        // Run on page load
+        clearEverything();
+    </script>
+</body>
+</html>
